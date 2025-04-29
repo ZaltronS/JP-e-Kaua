@@ -12,4 +12,8 @@ def guardar_dado(dados,armaz,numero):
     dados.pop(numero)
     return[dados,armaz]
 
+def remover_dado(dados,armaz,numero):
+    dados.append(armaz[numero])
+    armaz.pop(numero)
+    return[dados,armaz]
 
