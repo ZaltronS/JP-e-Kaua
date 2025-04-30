@@ -56,3 +56,17 @@ def calcula_pontos_soma(dados):
         soma+= valor
     return soma
 # print(calcula_pontos_soma([2, 3, 4, 5, 2]))
+def calcula_pontos_sequencia_baixa(dados):
+    valores_d = []
+    for valor in dados:
+        if valor not in valores_d:
+            valores_d.append(valor)
+
+    if 1 in valores_d and 2 in valores_d and 3 in valores_d and 4 in valores_d:
+        return 15
+    if 2 in valores_d and 3 in valores_d and 4 in valores_d and 5 in valores_d:
+        return 15
+    if 3 in valores_d and 4 in valores_d and 5 in valores_d and 6 in valores_d:
+        return 15
+
+    return 0
