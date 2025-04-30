@@ -37,10 +37,10 @@ def remover_dado(dados_rolados, dados_no_estoque, dado_para_remover):
             dado = dados_no_estoque[i]
             dados_rolados.append(dado)
     return [dados_rolados, novo_estoque]
+
 # dados_rolados = [2, 2, 2, 2]
 # dados_no_estoque = [1]
 # teste = 0
-
 # print(remover_dado(dados_rolados, dados_no_estoque, teste)
 
 def calcula_pontos_regra_simples(lista):
@@ -49,4 +49,10 @@ def calcula_pontos_regra_simples(lista):
         if 1<= n <= 6 :
             dic[n] += n
     return dic
-    
+
+def calcula_pontos_soma(dados):
+    soma = 0
+    for valor in dados:
+        soma+= valor
+    return soma
+# print(calcula_pontos_soma([2, 3, 4, 5, 2]))
