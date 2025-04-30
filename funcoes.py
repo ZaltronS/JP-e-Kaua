@@ -70,3 +70,16 @@ def calcula_pontos_sequencia_baixa(dados):
         return 15
 
     return 0
+
+def calcula_pontos_sequencia_alta(dados):
+    valores_d = []
+    for valor in dados:
+        if valor not in valores_d:
+            valores_d.append(valor)
+
+    if 1 in valores_d and 2 in valores_d and 3 in valores_d and 4 in valores_d and 5 in valores_d:
+        return 30
+    if 2 in valores_d and 3 in valores_d and 4 in valores_d and 5 in valores_d and 6 in valores_d:
+        return 30
+
+    return 0
