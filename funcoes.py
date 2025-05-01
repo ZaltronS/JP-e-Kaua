@@ -83,3 +83,15 @@ def calcula_pontos_sequencia_alta(dados):
         return 30
 
     return 0
+
+def calcula_pontos_full_house (lista):
+    dicionario = {1:0, 2:0, 3:0, 4:0,5:0, 6 :0 }
+    somadados = 0
+    for x in lista:
+        dicionario[x] +=1
+    if 3 in dicionario.values() and 2 in dicionario.values() :
+        for y in lista :
+            somadados += y
+        return somadados
+    else:
+        return 0
