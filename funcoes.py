@@ -84,6 +84,7 @@ def calcula_pontos_sequencia_alta(dados):
 
     return 0
 
+
 def calcula_pontos_full_house (lista):
     dicionario = {1:0, 2:0, 3:0, 4:0,5:0, 6 :0 }
     somadados = 0
@@ -95,3 +96,23 @@ def calcula_pontos_full_house (lista):
         return somadados
     else:
         return 0
+
+
+def calcula_pontos_quadra(dados):
+    valores_d = []
+    for valor in dados:
+        if valor not in valores_d:  #uso not in
+            valores_d.append(valor)
+
+    for i in valores_d:
+        repeticoes = 0
+        for j in dados:
+            if j == i:
+                repeticoes += 1
+        if repeticoes >= 4:
+            soma = 0
+            for n in dados:
+                soma += n
+            return soma
+
+    return 0
