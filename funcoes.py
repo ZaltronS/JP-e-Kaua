@@ -146,3 +146,19 @@ def  calcula_pontos_regra_avancada(lista):
     pontos['sem_combinacao'] = soma
     return pontos 
 
+def faz_jogada (lista,stg,dic):
+    pontossimples = calcula_pontos_regra_simples(lista)
+    pontosavancado = calcula_pontos_regra_avancada(lista)
+
+    for i , j in pontosavancado.items():
+        if i == stg:
+            dic['regra_avancada'][i] = j
+        
+    for x,y in pontossimples.items():
+        if str(x)== stg:
+            dic['regra_simples'][x]= y
+    return dic 
+
+
+
+
