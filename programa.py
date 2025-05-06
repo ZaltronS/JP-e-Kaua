@@ -1,141 +1,24 @@
-import random
+def verifica_categoria(cat, cartela):
+   
+    numeros = ['1','2','3','4','5','6']
+    if cat in numeros:
+        cat = int(cat)
 
-def rolar_dados(num):
-    lista = []
-    for _ in range(num):
-        lista.append(random.randint(1, 6))
-    return lista
+    if cat in cartela['regra_simples'] and cartela['regra_simples'][cat] != -1:
+        return 1
+    
+    elif cat in cartela['regra_avancada'] and cartela['regra_avancada'][cat] != -1:
+        return 1
+    
+    elif cat not in cartela['regra_avancada'] and cat not in cartela['regra_simples']:
+       return 0
+    
+from funcoes import *
 
-def guardar_dado(dados_rolados, dados_no_estoque, dado_para_guardar):
-    novos_dados_rolados = []
-    for i in range(len(dados_rolados)):
-        if i != dado_para_guardar:
-            novos_dados_rolados.append(dados_rolados[i])
-        else:
-            dados_no_estoque.append(dados_rolados[i])
-    return [novos_dados_rolados, dados_no_estoque]
+rol = rolar_dados(5)
+guard = []
 
-def remover_dado(dados_rolados, dados_no_estoque, dado_para_remover):
-    novo_estoque = []
-    for i in range(len(dados_no_estoque)):
-        if i != dado_para_remover:
-            novo_estoque.append(dados_no_estoque[i])
-        else:
-            dados_rolados.append(dados_no_estoque[i])
-    return [dados_rolados, novo_estoque]
-
-def calcula_pontos_regra_simples(lista):
-    dic = {i: 0 for i in range(1, 7)}
-    for n in lista:
-        if 1 <= n <= 6:
-            dic[n] += n
-    return dic
-
-def calcula_pontos_soma(dados):
-    soma = 0
-    for valor in dados:
-        soma += valor
-    return soma
-
-def calcula_pontos_sequencia_baixa(dados):
-    valores_d = []
-    for valor in dados:
-        if valor not in valores_d:
-            valores_d.append(valor)
-    if all(x in valores_d for x in [1, 2, 3, 4]):
-        return 15
-    if all(x in valores_d for x in [2, 3, 4, 5]):
-        return 15
-    if all(x in valores_d for x in [3, 4, 5, 6]):
-        return 15
-    return 0
-
-def calcula_pontos_sequencia_alta(dados):
-    valores_d = []
-    for valor in dados:
-        if valor not in valores_d:
-            valores_d.append(valor)
-    if all(x in valores_d for x in [1, 2, 3, 4, 5]):
-        return 30
-    if all(x in valores_d for x in [2, 3, 4, 5, 6]):
-        return 30
-    return 0
-
-def calcula_pontos_full_house(lista):
-    contagem = {}
-    for x in lista:
-        if x not in contagem:
-            contagem[x] = 1
-        else:
-            contagem[x] += 1
-    if sorted(contagem.values()) == [2, 3]:
-        return sum(lista)
-    return 0
-
-def calcula_pontos_quadra(dados):
-    for i in dados:
-        repeticoes = 0
-        for j in dados:
-            if i == j:
-                repeticoes += 1
-        if repeticoes >= 4:
-            return sum(dados)
-    return 0
-
-def calcula_pontos_quina(dados):
-    for i in dados:
-        repeticoes = 0
-        for j in dados:
-            if i == j:
-                repeticoes += 1
-        if repeticoes >= 5:
-            return 50
-    return 0
-
-def calcula_pontos_regra_avancada(lista):
-    return {
-        'cinco_iguais': calcula_pontos_quina(lista),
-        'full_house': calcula_pontos_full_house(lista),
-        'quadra': calcula_pontos_quadra(lista),
-        'sem_combinacao': calcula_pontos_soma(lista),
-        'sequencia_alta': calcula_pontos_sequencia_alta(lista),
-        'sequencia_baixa': calcula_pontos_sequencia_baixa(lista)
-    }
-
-def faz_jogada(lista, stg, dic):
-    simples = calcula_pontos_regra_simples(lista)
-    avancado = calcula_pontos_regra_avancada(lista)
-
-    if stg in dic['regra_avancada']:
-        dic['regra_avancada'][stg] = avancado[stg]
-    elif stg.isdigit():
-        numero = int(stg)
-        if numero in dic['regra_simples']:
-            dic['regra_simples'][numero] = simples[numero]
-    return dic
-
-def imprime_cartela(cartela):
-    print("Cartela de Pontos:")
-    print("-" * 25)
-
-    for i in range(1, 7):
-        filler = " " * (15 - len(str(i)))
-        if cartela['regra_simples'][i] != -1:
-            print(f"| {i}:{filler}| {cartela['regra_simples'][i]:02} |")
-        else:
-            print(f"| {i}:{filler}|    |")
-
-    for chave in ['sem_combinacao', 'quadra', 'full_house', 'sequencia_baixa', 'sequencia_alta', 'cinco_iguais']:
-        filler = " " * (15 - len(str(chave)))
-        if cartela['regra_avancada'][chave] != -1:
-            print(f"| {chave}:{filler}| {cartela['regra_avancada'][chave]:02} |")
-        else:
-            print(f"| {chave}:{filler}|    |")
-
-    print("-" * 25)
-
-# Chamada automática de teste para o Prairie Learn
-cartela_exemplo = {
+cartela = {
     'regra_simples': {
         1: -1,
         2: -1,
@@ -154,4 +37,124 @@ cartela_exemplo = {
     }
 }
 
-imprime_cartela(cartela_exemplo)
+def rodada(cartela, rol, guard):
+    cont_rolagem = 0
+
+    print("Digite 1 para guardar um dado, 2 para remover um dado, 3 para rerrolar, 4 para ver a cartela ou 0 para marcar a pontuação:")
+    dec = input()
+
+    while dec != '0':
+        
+        if dec == '1':
+            print("Digite o índice do dado a ser guardado (0 a 4):")
+            indice = int(input())
+
+            funcao = guardar_dado(rol, guard, indice)
+            rol = funcao[0]
+            guard = funcao[1]
+
+            print(f'Dados rolados: {rol}')
+            print(f'Dados guardados: {guard}')
+
+            print("Digite 1 para guardar um dado, 2 para remover um dado, 3 para rerrolar, 4 para ver a cartela ou 0 para marcar a pontuação:")
+            dec = input()
+
+        elif dec == '2':
+            
+            print("Digite o índice do dado a ser removido (0 a 4):")
+            indice = int(input())
+
+            funcao = remover_dado(rol, guard, indice)
+            rol = funcao[0]
+            guard = funcao[1]
+
+            print(f'Dados rolados: {rol}')
+            print(f'Dados guardados: {guard}')
+
+            print("Digite 1 para guardar um dado, 2 para remover um dado, 3 para rerrolar, 4 para ver a cartela ou 0 para marcar a pontuação:")
+            dec = input() 
+
+
+        elif dec == '3':
+            if cont_rolagem >= 2:
+                print("Você já usou todas as rerrolagens.")
+            else:
+                rol = rolar_dados(len(rol))
+                cont_rolagem += 1
+
+            print(f'Dados rolados: {rol}')
+            print(f'Dados guardados: {guard}')
+
+            print("Digite 1 para guardar um dado, 2 para remover um dado, 3 para rerrolar, 4 para ver a cartela ou 0 para marcar a pontuação:")
+            dec = input()
+
+        elif dec == '4':
+            imprime_cartela(cartela)
+
+            print(f'Dados rolados: {rol}')
+            print(f'Dados guardados: {guard}')
+
+            print("Digite 1 para guardar um dado, 2 para remover um dado, 3 para rerrolar, 4 para ver a cartela ou 0 para marcar a pontuação:")
+            dec = input()
+
+        else:
+            print("Opção inválida. Tente novamente.")
+            dec = input()
+        
+
+    dados = rol + guard
+
+    print("Digite a combinação desejada:")
+    categoria = input()
+
+    test = verifica_categoria(categoria, cartela)
+
+    while test == 1 or test == 0:
+        if test == 1:
+            print("Essa combinação já foi utilizada.")
+            categoria = input()
+
+        elif test == 0:
+            print("Combinação inválida. Tente novamente.")
+            categoria = input()
+        test = verifica_categoria(categoria, cartela)
+
+    faz_jogada(dados, categoria, cartela)
+
+
+    return cartela
+
+# Programa principal
+cont_rod = 0
+
+imprime_cartela(cartela)
+print(f'Dados rolados: {rol}')
+print(f'Dados guardados: {guard}')
+
+while cont_rod < 12:
+    cartela = rodada(cartela, rol, guard)
+    
+    rol = rolar_dados(5)
+    guard = []
+
+    if cont_rod != 11:
+        print(f'Dados rolados: {rol}')
+        print(f'Dados guardados: {guard}')
+    
+    cont_rod += 1
+
+# Cálculo da pontuação final
+pont = 0
+pontos_regras_simples = 0
+
+for regra, valores in cartela.items():
+    for pontos in valores.values():
+        pont += pontos
+        if regra == 'regra_simples':
+            pontos_regras_simples += pontos
+
+if pontos_regras_simples >= 63:
+    pont += 35
+
+imprime_cartela(cartela)
+print(f"Pontuação total: {pont}")
